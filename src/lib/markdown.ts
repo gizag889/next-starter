@@ -51,14 +51,16 @@ export async function getReleaseData(version: string) {
   const fullPath = path.join(releasesDirectory, `${version}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
  
-  // フロントマターでパース
+  // フロントマターでパース matter()は、Markdown文字列からフロントマター（YAML/TOML/JSONのメタデータ）を切り出して解析する処理を行います。
   const matterResult = matter(fileContents);
  
-  // Markdownをパースしてhtml文字列に変換
+  // Markdownをパースしてhtml文字列に変換 
   const processedContent = await remark()
+  //remark-html プラグインを適用 falseの場合: すべてのHTMLタグをそのまま出力
     .use(html, { sanitize: false })
+    //本文部分をマークダウン → HTML 変換処理を実行
     .process(matterResult.content);
-
+    //.toString() で実際のHTML文字列を取得
   const contentHtml = processedContent.toString();
  
   return {
